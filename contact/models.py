@@ -7,10 +7,10 @@ class ContactModel(Base):
     __tablename__ = "contacts"
 
     id = Column(Integer, primary_key=True, index=True)
-    full_name = Column(String(50), nullable=True)
-    phone = Column(String(14), nullable=True)
-    email = Column(String(50), nullable=True)
-    telegram_id = Column(String(20), nullable=True)
+    full_name = Column(String(50), nullable=True, unique=True)
+    phone = Column(String(14), nullable=True, unique=True)
+    email = Column(String(50), nullable=True, unique=True)
+    telegram_id = Column(String(20), nullable=True, unique=True)
     is_active = Column(Boolean, default=True)
     description = Column(String(255), nullable=True)
 

@@ -3,6 +3,27 @@ from server import schemas, models
 from fastapi import HTTPException, status
 
 
+def set_null(request):
+    """convert '' request to null"""
+
+    if len(request.name) == 0:
+        request.name = None
+    if len(request.ip) == 0:
+        request.ip = None
+
+    return request
+
+
+def check_update_exist(_object, method, _id, db):
+    """check item exist request for update"""
+
+    if db.filter(_object == method).filter(
+        models.ServerModel.id != _id
+    ).first():
+        return False
+    return True
+
+
 def check_server(request: schemas.InServerSchemas, db: Session):
     """چک کردن دیتا در صورت وجود نداشتن برای ساخت سرور جدید"""
 
@@ -32,7 +53,7 @@ def create_server(request: schemas.InServerSchemas, db: Session):
         )
 
     request.ip = request.ip.__str__()
-
+    request = set_null(request)
     new_contact = models.ServerModel(**request.dict())
     db.add(new_contact)
     db.commit()
@@ -68,22 +89,45 @@ def update_server(
     request: schemas.InServerSchemas,
     db: Session
 ):
-
-    server = db.query(models.ServerModel).filter(
+    query_db = db.query(models.ServerModel)
+    server = query_db.filter(
         models.ServerModel.id == _id
-    ).first()
-    if not server:
+    )
+    if not server.first():
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"Server with the ID: {_id} not available"
         )
 
     request.ip = request.ip.__str__()
-    db.query(models.ServerModel).filter(
-        models.ServerModel.id == _id
-    ).update(request.dict())
-    db.commit()
-    return {'detail': f'Server with the ID: {_id} is updated.'}
+    request = set_null(request)
+
+    flag = dict()
+    if not check_update_exist(
+        models.ServerModel.name,
+        request.name,
+        _id,
+        query_db
+    ):
+        flag['name'] = 'name is exist!'
+
+    if not check_update_exist(
+        models.ServerModel.ip,
+        request.ip,
+        _id,
+        query_db
+    ):
+        flag['ip'] = 'ip is exist!'
+
+    if not flag:
+        server.update(request.dict())
+        db.commit()
+        return {'detail': f'Server with the ID: {_id} is updated.'}
+
+    raise HTTPException(
+        status_code=status.HTTP_409_CONFLICT,
+        detail=flag
+        )
 
 
 def delete_server(_id: int, db: Session):
