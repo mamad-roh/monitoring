@@ -1,0 +1,104 @@
+from sqlalchemy.orm import Session
+from server import schemas, models
+from fastapi import HTTPException, status
+
+
+def check_server(request: schemas.InServerSchemas, db: Session):
+    """چک کردن دیتا در صورت وجود نداشتن برای ساخت سرور جدید"""
+
+    flag = dict()
+    data = db.query(models.ServerModel)
+    if data.filter(
+        models.ServerModel.name == request.name
+    ).first():
+        if request.name:
+            flag['name'] = 'server name is exist!'
+
+    if data.filter(
+        models.ServerModel.ip == request.ip.__str__()
+    ).first():
+        if request.ip:
+            flag['ip'] = 'ip address is exist!'
+
+    return flag
+
+
+def create_server(request: schemas.InServerSchemas, db: Session):
+    flag = check_server(request, db)
+    if flag:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail=flag
+        )
+
+    request.ip = request.ip.__str__()
+
+    new_contact = models.ServerModel(**request.dict())
+    db.add(new_contact)
+    db.commit()
+    db.refresh(new_contact)
+    return {"detail": "server is added."}
+
+
+def get_servers(db: Session):
+    servers = db.query(models.ServerModel).all()
+    if not servers:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail="Server list is empty."
+        )
+    return servers
+
+
+def get_server(_id, db: Session):
+    server = db.query(models.ServerModel).filter(
+        models.ServerModel.id == _id
+    ).first()
+
+    if not server:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail=f"Server with the ID: {_id} not available"
+        )
+    return server
+
+
+def update_server(
+    _id: int,
+    request: schemas.InServerSchemas,
+    db: Session
+):
+
+    server = db.query(models.ServerModel).filter(
+        models.ServerModel.id == _id
+    ).first()
+    if not server:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Server with the ID: {_id} not available"
+        )
+
+    request.ip = request.ip.__str__()
+    db.query(models.ServerModel).filter(
+        models.ServerModel.id == _id
+    ).update(request.dict())
+    db.commit()
+    return {'detail': f'Server with the ID: {_id} is updated.'}
+
+
+def delete_server(_id: int, db: Session):
+
+    server = db.query(models.ServerModel).filter(
+        models.ServerModel.id == _id
+    ).first()
+
+    if not server:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Server with the ID: {_id} not available"
+        )
+    db.query(models.ServerModel).filter(
+        models.ServerModel.id == _id
+    ).delete(synchronize_session=False)
+    db.commit()
+    return {'detail': f'Server with the ID: {_id} is deleted.'}

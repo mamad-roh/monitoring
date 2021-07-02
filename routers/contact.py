@@ -1,5 +1,4 @@
 from fastapi import Depends, status
-from starlette import responses
 from database import database
 from sqlalchemy.orm import Session
 from fastapi import APIRouter
@@ -50,3 +49,14 @@ def update_contact(
     """آپدیت کردن مخاطب در صورت وجود"""
 
     return repository.update_contact(_id, request, db)
+
+
+# status_code=HTTP_204_NO_CONTENT
+@router.delete('/{_id}')
+def delete_contact(
+        _id: int,
+        db: Session = Depends(get_db),
+):
+    """پاک کردن یک مخاطب در صورت وجود"""
+
+    return repository.delete(db, _id)

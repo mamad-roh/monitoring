@@ -1,7 +1,12 @@
 from typing import Optional
-from typing_extensions import Annotated
-from database.database import Base
+from pydantic import BaseModel, IPvAnyAddress
+from fastapi import Query
 
 
-class InServerSchmas(Base):
-    pass
+class InServerSchemas(BaseModel):
+    class Config:
+        orm_mode = True
+    name: str = Query(None, min_length=1, max_length=50)
+    ip: IPvAnyAddress
+    is_active: Optional[bool]
+    description: Optional[str] = Query(None, max_length=255)

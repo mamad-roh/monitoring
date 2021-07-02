@@ -7,7 +7,7 @@ class ServerModel(Base):
     __tablename__ = 'servers'
 
     id = Column(Integer, primary_key=True, index=True)
-    name = Column(String(50), nullable=False)
-    ip = Column(String, nullable=False, unique=True)
+    name = Column(String(50), nullable=False, unique=True, index=True)
+    ip = Column(String, nullable=False, unique=True, index=True)
     is_active = Column(Boolean, default=True)
     description = Column(String, nullable=True)

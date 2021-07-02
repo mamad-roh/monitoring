@@ -1,7 +1,5 @@
 from sqlalchemy.orm import Session
 from fastapi import HTTPException, status
-from sqlalchemy.sql.functions import mode
-from starlette import responses
 from contact import models
 
 
@@ -95,10 +93,28 @@ def update_contact(_id: int, request, db: Session):
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"Contact with the ID: {_id} not available"
         )
-    
 
     db.query(models.ContactModel).filter(
         models.ContactModel.id == _id
     ).update(request.dict())
     db.commit()
     return {'detail': f'Contact with the ID: {_id} is updated.'}
+
+
+def delete(db, _id: int):
+    """پاک کردن یک مخاطب در صورت وجود"""
+
+    contact = db.query(models.ContactModel).filter(
+        models.ContactModel.id == _id
+    ).first()
+
+    if contact is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Contact with the ID: {_id} not available"
+        )
+    db.query(models.ContactModel).filter(
+        models.ContactModel.id == _id
+    ).delete(synchronize_session=False)
+    db.commit()
+    return {'detail': f'Contact with the ID: {_id} is deleted.'}

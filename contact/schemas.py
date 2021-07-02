@@ -18,7 +18,7 @@ class InContactSchemas(BaseModel):
     phone: Annotated[Optional[str], Field(max_length=14)]
     email: Optional[EmailEmptyAllowedStr]
     telegram_id: Annotated[Optional[str], Field(max_length=50)]
-    is_active: bool
+    is_active: Optional[bool]
     description: Annotated[Optional[str], Field(max_length=255)]
 
 
