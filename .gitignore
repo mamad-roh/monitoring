@@ -5,6 +5,9 @@
 ### Python ###
 # Byte-compiled / optimized / DLL files
 __pycache__/
+__pycache__
+*__pycache__/*
+*__pycache__
 !**/__pycache__/
 contact/__pycache__/
 */__pycache__/
