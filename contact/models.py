@@ -1,5 +1,5 @@
 from sqlalchemy import Boolean, Column, Integer, String
-# from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship
 from database.database import Base
 
 
@@ -15,3 +15,5 @@ class ContactModel(Base):
     description = Column(String(255), nullable=True)
 
     # items = relationship("ContactModel", back_populates="owner")
+
+    child_contact = relationship('ManageServer', back_populates='parant_contact')
