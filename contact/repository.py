@@ -59,7 +59,7 @@ def check_update_exist(_object, method, _id, db):
 
 
 def create(request, db):
-    """ساخت کانتکت جدید"""
+    """ساخت مخاطب جدید"""
 
     flag = check_contact(request, db)
     if flag:

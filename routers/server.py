@@ -45,7 +45,7 @@ def update_server(
     return repository.update_server(_id, request, db)
 
 
-@router.delete('/{_id}')
+@router.delete('/{_id}', status_code=status.HTTP_200_OK)
 def delete_server(_id: int, db=Depends(get_db)):
 
     return repository.delete_server(_id, db)

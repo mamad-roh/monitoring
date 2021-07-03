@@ -17,3 +17,10 @@ class InContactInServers(BaseModel):
 
     server_id: List[int] = Query(None, min_items=1)
     contact_id: int
+
+
+class INContactServerDelete(BaseModel):
+    class Config:
+        orm_mode = True
+    server_id: int
+    contact_id: int

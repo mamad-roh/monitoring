@@ -10,6 +10,18 @@ router = APIRouter(
 get_db = database.get_db
 
 
+@router.get('/', status_code=status.HTTP_200_OK)
+def get_all_manage_server(db=Depends(get_db)):
+
+    return repository.get_all_manage_server(db)
+
+
+@router.get('/{name}/{_id}', status_code=status.HTTP_200_OK)
+def get_manage_server(name: str, _id: int, db=Depends(get_db)):
+
+    return repository.get_manage_server(name, _id, db)
+
+
 @router.post('/s', status_code=status.HTTP_201_CREATED)
 def add_server_contacts(
     request: schemas.InServerInContacts,
@@ -26,3 +38,12 @@ def add_contact_servers(
 ):
 
     return repository.create_contact_servers(request, db)
+
+
+@router.delete('/', status_code=status.HTTP_200_OK)
+def delete_contact_server(
+    request: schemas.INContactServerDelete,
+    db=Depends(get_db)
+):
+
+    return repository.delete_manage_server(request, db)
