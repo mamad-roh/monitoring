@@ -10,3 +10,7 @@ class InServerSchemas(BaseModel):
     ip: IPvAnyAddress
     is_active: Optional[bool]
     description: Optional[str] = Query(None, max_length=255)
+
+
+class OutServerGet(InServerSchemas):
+    id: int

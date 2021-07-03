@@ -1,3 +1,4 @@
+from typing import List
 from fastapi import status, Depends, APIRouter
 from database import database
 from manage_server import repository, schemas
@@ -10,13 +11,21 @@ router = APIRouter(
 get_db = database.get_db
 
 
-@router.get('/', status_code=status.HTTP_200_OK)
+@router.get(
+    '/',
+    status_code=status.HTTP_200_OK,
+    response_model=List[schemas.OutContactServerGet]
+)
 def get_all_manage_server(db=Depends(get_db)):
 
     return repository.get_all_manage_server(db)
 
 
-@router.get('/{name}/{_id}', status_code=status.HTTP_200_OK)
+@router.get(
+    '/{name}/{_id}',
+    status_code=status.HTTP_200_OK,
+    response_model=List[schemas.OutContactServerGet]
+    )
 def get_manage_server(name: str, _id: int, db=Depends(get_db)):
 
     return repository.get_manage_server(name, _id, db)

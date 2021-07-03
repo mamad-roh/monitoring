@@ -14,7 +14,6 @@ class ManageServer(Base):
     contact_id = Column(Integer, ForeignKey(
         'contacts.id', ondelete='CASCADE'
         ), nullable=False)
-    # owner = relationship("UserModel", back_populates="items")
 
     parant_server = relationship(
         'ServerModel',

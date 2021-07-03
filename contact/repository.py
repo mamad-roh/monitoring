@@ -182,8 +182,6 @@ def delete(db, _id: int):
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"Contact with the ID: {_id} not available"
         )
-    db.query(models.ContactModel).filter(
-        models.ContactModel.id == _id
-    ).delete(synchronize_session=False)
+    db.delete(contact)
     db.commit()
     return {'detail': f'Contact with the ID: {_id} is deleted.'}

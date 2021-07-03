@@ -13,4 +13,8 @@ class ServerModel(Base):
     is_active = Column(Boolean, default=True)
     description = Column(String, nullable=True)
 
-    child_server = relationship('ManageServer', back_populates='parant_server')
+    child_server = relationship(
+        'ManageServer',
+        back_populates='parant_server',
+        cascade="all, delete"
+    )

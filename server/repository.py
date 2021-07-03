@@ -141,8 +141,6 @@ def delete_server(_id: int, db: Session):
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"Server with the ID: {_id} not available"
         )
-    db.query(models.ServerModel).filter(
-        models.ServerModel.id == _id
-    ).delete(synchronize_session=False)
+    db.delete(server)
     db.commit()
     return {'detail': f'Server with the ID: {_id} is deleted.'}

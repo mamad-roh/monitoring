@@ -16,4 +16,8 @@ class ContactModel(Base):
 
     # items = relationship("ContactModel", back_populates="owner")
 
-    child_contact = relationship('ManageServer', back_populates='parant_contact')
+    child_contact = relationship(
+        'ManageServer',
+        back_populates='parant_contact',
+        cascade="all, delete"
+    )

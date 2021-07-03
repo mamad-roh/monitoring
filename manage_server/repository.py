@@ -9,7 +9,6 @@ def set_object(_id: int, ls: set, act: str):
     """گرفتن لیست از ایدی ها و تبدیل ان به آبجکت برای ذخیره در دیتابیس"""
 
     list_object = []
-    print(ls)
     if act == 'server':
         for item in ls:
             params = {
@@ -156,7 +155,7 @@ def delete_manage_server(
             models.ManageServer.server_id == s_id
         )
         if server.first():
-            server.delete(synchronize_session=False)
+            db.delete(server.first())
             db.commit()
             return {'detail': f'Server with the ID: {s_id} is deleted.'}
         raise HTTPException(
