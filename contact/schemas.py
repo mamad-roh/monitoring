@@ -1,3 +1,4 @@
+from fastapi import Query
 from pydantic import BaseModel, EmailStr, Field
 from typing import Optional
 from typing_extensions import Annotated
@@ -14,12 +15,13 @@ class EmailEmptyAllowedStr(EmailStr):
 class InContactSchemas(BaseModel):
     class Config:
         orm_mode = True
-    full_name: Annotated[str, Field(min_length=4, max_length=50)]
-    phone: Annotated[Optional[str], Field(max_length=14)]
-    email: Optional[EmailEmptyAllowedStr]
-    telegram_id: Annotated[Optional[str], Field(max_length=50)]
-    is_active: Optional[bool]
-    description: Annotated[Optional[str], Field(max_length=255)]
+    full_name: str = Query(None, min_length=4, max_length=50)
+    # phone: Annotated[str, Field(max_length=14)]
+    phone: str = Query(None, max_length=14)
+    email: EmailEmptyAllowedStr = Query(None)
+    telegram_id: str = Query(None, max_length=50)
+    is_active: bool
+    description: str = Query(None, max_length=255)
 
 
 class OutContactSchemas(InContactSchemas):

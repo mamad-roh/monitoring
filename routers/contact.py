@@ -1,5 +1,4 @@
 from fastapi import Depends, status
-from starlette.status import HTTP_102_PROCESSING, HTTP_200_OK
 from database import database
 from sqlalchemy.orm import Session
 from fastapi import APIRouter
@@ -53,7 +52,7 @@ def update_contact(
 
 
 # status_code=HTTP_204_NO_CONTENT
-@router.delete('/{_id}', status_code=HTTP_200_OK)
+@router.delete('/{_id}', status_code=status.HTTP_200_OK)
 def delete_contact(
         _id: int,
         db: Session = Depends(get_db),

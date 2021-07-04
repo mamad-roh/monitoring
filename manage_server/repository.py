@@ -160,10 +160,9 @@ def delete_manage_server(
             return {'detail': f'Server with the ID: {s_id} is deleted.'}
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,
-            detail={
-                'detail': f'Server with the ID: {s_id} not available.'
-            }
+            detail=f'Server with the ID: {s_id} not available.'
         )
+
     raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,
             detail={
@@ -180,7 +179,7 @@ def get_all_manage_server(db: Session):
 
     raise HTTPException(
         status_code=status.HTTP_404_NOT_FOUND,
-        detail={'detail': 'ManageServer list is empty.'}
+        detail='ManageServer list is empty.'
     )
 
 
@@ -193,7 +192,7 @@ def get_manage_server(name: str, _id: int, db: Session):
             return data
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail={'detail': f'Server with ID: {_id} not found.'}
+            detail=f'Server with ID: {_id} not found.'
         )
     elif name == 'contact':
         data = db.query(models.ManageServer).filter(
@@ -203,7 +202,7 @@ def get_manage_server(name: str, _id: int, db: Session):
             return data
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail={'detail': f'Contact with ID: {_id} not found.'}
+            detail=f'Contact with ID: {_id} not found.'
         )
     else:
         raise HTTPException(
