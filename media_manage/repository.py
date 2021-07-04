@@ -121,6 +121,36 @@ def get_all_media_manage(db: Session):
     )
 
 
-def gat_media_manage(db: Session):
+def gat_media_manage(_id: int, db: Session):
 
-    
+    data = db.query(models.MediaManageModel).filter(
+        models.MediaManageModel.manage_server_id == _id
+    ).all()
+    if data:
+        return data
+    raise HTTPException(
+        status_code=status.HTTP_404_NOT_FOUND,
+        detail=f'ManageServer with ID: {_id} not found.'
+    )
+
+
+def delete_media_manage(
+    request: schemas.InMediaManageSchemasDelete,
+    db: Session
+):
+    m_id = request.media_id
+    m_s_id = request.manage_server_id
+    data = db.query(models.MediaManageModel)
+    data = data.filter(
+        models.MediaManageModel.media_id == m_id,
+        models.MediaManageModel.manage_server_id == m_s_id,
+    ).first()
+    if data:
+        db.delete(data)
+        db.commit()
+        return {'detail': f'table ID: {m_s_id}/{m_id} is deleted!'}
+
+    raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f'table ID: {m_s_id}/{m_id} not found!'
+        )

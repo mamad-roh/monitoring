@@ -27,3 +27,22 @@ def create_media_manage(
 def get_all_media_manage(db=Depends(get_db)):
 
     return repository.get_all_media_manage(db)
+
+
+@router.get(
+    '/{_id}',
+    status_code=status.HTTP_200_OK,
+    response_model=List[schemas.OutMediaManageSchemas]
+)
+def get_media_manager(_id, db=Depends(get_db)):
+
+    return repository.gat_media_manage(_id, db)
+
+
+@router.delete('/', status_code=status.HTTP_200_OK)
+def delete_media_manage(
+    request: schemas.InMediaManageSchemasDelete,
+    db=Depends(get_db)
+):
+
+    return repository.delete_media_manage(request, db)

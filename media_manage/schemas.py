@@ -19,6 +19,18 @@ class InMediaManageSchemas(BaseModel):
     )
 
 
+class InMediaManageSchemasDelete(BaseModel):
+    class Config:
+        orm_mode = True
+
+    manage_server_id: int
+    media_id: int
+
+
+class InMediaManageSchemasUpdate(InMediaManageSchemasDelete):
+    description: str
+
+
 class OutMediaManageSchemas(BaseModel):
     class Config:
         orm_mode = True
@@ -27,4 +39,4 @@ class OutMediaManageSchemas(BaseModel):
     manage_server_id: int
     media_id: int
     parant_media: m_schemas.OutMediaSchemasGet
-    parant_manage_server: m_s_schemas.OutContactServerGet
+    parant_manage_server: m_s_schemas.INContactServerDelete

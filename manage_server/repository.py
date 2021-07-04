@@ -165,9 +165,7 @@ def delete_manage_server(
 
     raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,
-            detail={
-                'detail': f'Contact with the ID: {c_id} not available.'
-            }
+            detail=f'Contact with the ID: {c_id} not available.'
         )
 
 
