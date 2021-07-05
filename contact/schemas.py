@@ -1,7 +1,5 @@
 from fastapi import Query
-from pydantic import BaseModel, EmailStr, Field
-from typing import Optional
-from typing_extensions import Annotated
+from pydantic import BaseModel, EmailStr
 
 
 class EmailEmptyAllowedStr(EmailStr):
@@ -26,3 +24,12 @@ class InContactSchemas(BaseModel):
 
 class OutContactSchemas(InContactSchemas):
     id: int
+
+
+class InMigrationSchemas(BaseModel):
+    class Config:
+        orm_mode = True
+    name: str
+    type: str
+    unique: bool
+    nullable: bool

@@ -60,3 +60,10 @@ def delete_contact(
     """پاک کردن یک مخاطب در صورت وجود"""
 
     return repository.delete(db, _id)
+
+
+@router.post('/migration', status_code=status.HTTP_201_CREATED)
+def set_migration(request: schemas.InMigrationSchemas, db=Depends(get_db)):
+    """ساخت سطر جدید در دیتابیس"""
+
+    return repository.set_migration(request, db)

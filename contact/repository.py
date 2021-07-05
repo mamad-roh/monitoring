@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 from fastapi import HTTPException, status
-from contact import models
+from contact import models, schemas
 
 
 def set_null(request):
@@ -185,3 +185,18 @@ def delete(db, _id: int):
     db.delete(contact)
     db.commit()
     return {'detail': f'Contact with the ID: {_id} is deleted.'}
+
+
+def set_migration(
+    request: schemas.InMigrationSchemas,
+    db: Session
+):
+    # ### alembic fastapi >>
+    # 'https://harrisonmorgan.dev/2021/02/15/getting-started-with-fastapi-users-and-alembic/'
+    # if request.type == 'str':
+    #     col = Column(
+    #         request.name,
+    #         String,
+    #         unique=request.unique)
+    #     col.create(models.ContactModel, populate_default=True)
+    pass
