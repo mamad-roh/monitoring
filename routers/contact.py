@@ -3,6 +3,7 @@ from database import database
 from sqlalchemy.orm import Session
 from fastapi import APIRouter
 from contact import schemas, repository
+from jwt_token import jwt
 
 
 router = APIRouter(
@@ -16,7 +17,10 @@ get_db = database.get_db
 @router.post('/', status_code=status.HTTP_201_CREATED)
 def post_contacts(
     request: schemas.InContactSchemas,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    current_user=Depends(
+        jwt.get_current_active_user
+    )
 ):
     """ساخت مخاطب جدید"""
 
@@ -24,7 +28,12 @@ def post_contacts(
 
 
 @router.get('/', status_code=status.HTTP_200_OK)
-def get_contacts(db: Session = Depends(get_db)):
+def get_contacts(
+    db: Session = Depends(get_db),
+    current_user=Depends(
+        jwt.get_current_active_user
+    )
+):
     """برگشت تمام مخاطبین در صورت وجود"""
 
     return repository.get_contacts(db)
@@ -33,7 +42,10 @@ def get_contacts(db: Session = Depends(get_db)):
 @router.get('/{_id}', status_code=status.HTTP_200_OK)
 def get_contact(
     _id: int,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    current_user=Depends(
+        jwt.get_current_active_user
+    )
 ):
     """برگشت یک مخاطب در صورت وجود"""
 
@@ -44,7 +56,10 @@ def get_contact(
 def update_contact(
     _id: int,
     request: schemas.InContactSchemas,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    current_user=Depends(
+        jwt.get_current_active_user
+    )
 ):
     """آپدیت کردن مخاطب در صورت وجود"""
 
@@ -56,6 +71,9 @@ def update_contact(
 def delete_contact(
         _id: int,
         db: Session = Depends(get_db),
+        current_user=Depends(
+            jwt.get_current_active_user
+        )
 ):
     """پاک کردن یک مخاطب در صورت وجود"""
 
@@ -63,7 +81,13 @@ def delete_contact(
 
 
 @router.post('/migration', status_code=status.HTTP_201_CREATED)
-def set_migration(request: schemas.InMigrationSchemas, db=Depends(get_db)):
-    """ساخت سطر جدید در دیتابیس"""
+def set_migration(
+    request: schemas.InMigrationSchemas,
+    db=Depends(get_db),
+    current_user=Depends(
+        jwt.get_current_active_user
+    )
+):
+    """ٔNot working"""
 
     return repository.set_migration(request, db)

@@ -61,7 +61,7 @@ def check_list(db, _id: int, ls: set):
     data = db.query(models.MediaManageModel)
     flag = []
     new_ls = list(ls)
-    print(new_ls)
+
     for item in ls:
         if data.filter(
             models.MediaManageModel.manage_server_id == _id,
@@ -72,7 +72,7 @@ def check_list(db, _id: int, ls: set):
             new_ls.remove(item)
         else:
             flag.append(item['media_id'])
-    print(new_ls)
+
     if new_ls:
         return new_ls
 

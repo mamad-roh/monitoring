@@ -14,12 +14,16 @@ def create_media(
     ).first():
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,
-            detail='Media name is exist.'
+            detail=f'Media name: {request.name} is exist.'
         )
-    new_media = models.MediaModel(**request.dict())
-    db.add(new_media)
-    db.commit()
-    return {"detail": "Media is added."}
+    flag = ['sms', 'call', 'tel', 'email']
+    if request.name in flag:
+        new_media = models.MediaModel(**request.dict())
+        db.add(new_media)
+        db.commit()
+        return {"detail": "Media is added."}
+    else:
+        return {'detail': f'Media name must be: {flag}'}
 
 
 def get_all_media(db: Session):

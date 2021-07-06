@@ -84,7 +84,7 @@ def check_list(db, _id: int, ls: set, act: str):
 
     raise HTTPException(
         status_code=status.HTTP_200_OK,
-        detail={'detail': 'added.'}
+        detail='added.'
     )
 
 

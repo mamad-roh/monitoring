@@ -15,5 +15,5 @@ def send_notif(
     request: schemas.InWebHookSchemas,
     db=Depends(get_db)
 ):
-
+    print(request.message)
     return repository_v2.receive_post(request, db)

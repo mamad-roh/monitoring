@@ -21,7 +21,6 @@ def get_media_manage(
     data_media_manage = db.query(m_m_models.MediaManageModel).filter(
         m_m_models.MediaManageModel.manage_server_id == _id
     ).all()
-    print(data_media_manage)
 
     # if not data_media_manage:
     #     raise HTTPException(
@@ -31,6 +30,47 @@ def get_media_manage(
 
     for _object in data_media_manage:
         yield _object.media_id, _object.detail
+
+
+def send_massage_contact(
+    c_data,
+    m_id,
+    db
+):
+    flag = []
+    media = db.query(m_models.MediaModel).filter(
+        m_models.MediaModel.id == m_id
+    ).first()
+
+    if media.name == 'sms':
+        if media.is_active:
+            if c_data.phone:
+                flag.append('sms send.')
+        else:
+            flag.append('sms is deactivate!')
+    elif media.name == 'call':
+        if media.is_active:
+            if c_data.phone:
+                flag.append('call send.')
+        else:
+            flag.append('call is deactivate!')
+    elif media.name == 'email':
+        if media.is_active:
+            if c_data.email:
+                flag.append('email send.')
+        else:
+            flag.append('email is deactivate!')
+    elif media.name == 'tel':
+        if media.is_active:
+            if c_data.telegram_id:
+                flag.append('telegram send.')
+        else:
+            flag.append('telegram is deactivate!')
+    else:
+        # اگر مقدار آن ست نشده باشد برای جلوگیری از کرش
+        return None
+
+    return flag
 
 
 def receive_post(
@@ -75,28 +115,18 @@ def receive_post(
             request.ip,
             db
         ):
-
-            flag_3 = []
-            media_name = db.query(m_models.MediaModel).filter(
-                m_models.MediaModel.id == m_id
-            ).first().name
-
-            if media_name == 'sms':
-                if c_data.phone:
-                    flag_3.append('sms send.')
-            elif media_name == 'call':
-                if c_data.phone:
-                    flag_3.append('call send.')
-            elif media_name == 'email':
-                if c_data.email:
-                    flag_3.append('email send.')
-            elif media_name == 'tel':
-                if c_data.telegram_id:
-                    flag_3.append('telegram send.')
+            if c_data.is_active:
+                flag_2.append(send_massage_contact(
+                    c_data,
+                    m_id,
+                    db
+                ))
             else:
-                # اگر مقدار آن ست نشده باشد برای جلوگیری از کرش
-                continue
-            flag_2.append(flag_3)
-        flag_1[c_data.full_name] = flag_2
+                flag_2.append(f'Contact: {c_data.full_name} is deactivate')
+        c_n = c_data.full_name
+        if not flag_2:
+            flag_1[c_n] = f'The MediaManage is not configured for the Contact with: {c_n}'
+        else:
+            flag_1[c_n] = flag_2
     print(flag_1)
-    return flag_1
+    return {'detail': flag_1}
