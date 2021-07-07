@@ -1,4 +1,10 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, IPvAnyAddress
+
+
+class InTokenSchemas(BaseModel):
+    class Config:
+        orm_mode = True
+    host_ip: IPvAnyAddress
 
 
 class InWebHookSchemas(BaseModel):

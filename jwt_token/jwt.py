@@ -131,3 +131,4 @@ def update_user_me(
         models.UserModel.id == current_user.id
         ).update(request.dict())
     db.commit()
+    return {'detail': 'user is updated.'}
