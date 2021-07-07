@@ -3,6 +3,14 @@ from typing import Optional
 from typing_extensions import Annotated
 
 
+class EmailEmptyAllowedStr(EmailStr):
+    @classmethod
+    def validate(cls, value: str) -> str:
+        if value == "":
+            return value
+        return super().validate(value)
+
+
 class UserSchemas(BaseModel):
     username: str
     first_name: str
@@ -26,10 +34,10 @@ class OutUserSchemas(BaseModel):
     class Config:
         orm_mode = True
     id: int
-    username: str
-    first_name: str
-    last_name: str
-    email: EmailStr
+    username: Optional[str]
+    first_name: Optional[str]
+    last_name: Optional[str]
+    email: Optional[EmailStr]
     is_active: Optional[bool]
     is_staff: Optional[bool]
 
@@ -40,7 +48,7 @@ class OutUserPutSchemas(BaseModel):
     username: str
     first_name: str
     last_name: str
-    email: EmailStr
+    email: EmailEmptyAllowedStr
     is_active: Optional[bool]
     is_staff: Optional[bool]
 

@@ -4,7 +4,7 @@ from database.database import Base
 
 
 class ManageServer(Base):
-    __tablename__ = 'ManageServer'
+    __tablename__ = 'manage_server'
 
     id = Column(Integer, primary_key=True)
     server_id = Column(Integer, ForeignKey(
@@ -22,4 +22,10 @@ class ManageServer(Base):
     parant_contact = relationship(
         'ContactModel',
         back_populates='child_contact'
+    )
+
+    child_manage_server = relationship(
+        'MediaManageModel',
+        back_populates='parant_manage_server',
+        cascade="all, delete"
     )

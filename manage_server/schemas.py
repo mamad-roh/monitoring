@@ -24,6 +24,7 @@ class InContactInServers(BaseModel):
 class OutContactServerGet(BaseModel):
     class Config:
         orm_mode = True
+    id: int
     server_id: int
     contact_id: int
     parant_server: s_schemas.OutServerGet
