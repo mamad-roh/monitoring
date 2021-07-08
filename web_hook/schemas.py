@@ -13,3 +13,11 @@ class InWebHookSchemas(BaseModel):
 
     ip: str
     message: str
+    token: str
+
+
+class GetTokenSchemas(BaseModel):
+    class Config:
+        orm_mode = True
+    id: int
+    host_ip: str

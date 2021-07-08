@@ -8,8 +8,8 @@ import uuid
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
-def verify_token(plain_password, hashed_password):
-    return pwd_context.verify(plain_password, hashed_password)
+def verify_token(plain_token, hashed_token):
+    return pwd_context.verify(plain_token, hashed_token)
 
 
 def get_token_hash(password):
@@ -51,34 +51,26 @@ def create_token(
         }
 
 
-def update_token(
-    request: schemas.InTokenUpdateSchemas,
-    db: Session
-):
-    db_query = db.query(models.TokenModel)
-    media = db_query.filter(
-        models.TokenModel.H == _id
-    )
-    if not media.first():
+def get_host_ip(db: Session):
+    host_ip = db.query(models.TokenModel).all()
+    if not host_ip:
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,
-            detail=f'Media with the ID: {_id} not available.'
+            detail="host ip list is empty."
         )
+    return host_ip
 
-    # if db_query.filter(
-    #     models.MediaModel.name == request.name,
-    #     models.MediaModel.id != _id
-    # ).first():
-    #     raise HTTPException(
-    #         status_code=status.HTTP_409_CONFLICT,
-    #         detail='Media name is exist.'
-    #     )
 
-    media.update(request.dict())
+def delete_token(_id: int, db: Session):
+    host_ip = db.query(models.TokenModel).filter(
+        models.TokenModel.id == _id
+    ).first()
+
+    if not host_ip:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"HostIP with the ID: {_id} not available"
+        )
+    db.delete(host_ip)
     db.commit()
-    return {'detail': f'Media with the ID: {_id} is updated.'}
-
-
-
-def delete_token(db: Session):
-    pass
+    return {'detail': f'HostIP with the ID: {_id} is deleted.'}

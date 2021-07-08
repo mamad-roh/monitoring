@@ -1,6 +1,6 @@
 from fastapi import HTTPException, status
 from sqlalchemy.orm import Session
-from web_hook import schemas
+from web_hook import schemas, models
 from manage_server import models as m_s_models
 from server import models as s_models
 from media_manage import models as m_m_models
@@ -73,11 +73,32 @@ def send_massage_contact(
     return flag
 
 
+def check_token(request, db: Session):
+    is_token = db.query(models.TokenModel).filter(
+        models.TokenModel.host_ip == request.ip
+    ).first()
+    if is_token:
+        if request.token == is_token.token:
+            return True
+        else:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail='Could not validate credentials'
+            )
+    else:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f'token dose not set for HostIP: {request.ip}'
+        )
+
+
 def receive_post(
     request: schemas.InWebHookSchemas,
-    db: Session
+    db: Session,
 ):
     """دریافت رکوئست هشدار از طرف زبیکس و ارسال آن به مخاطب"""
+
+    check_token(request, db)
 
     # گرفتن آیدی سرور در صورت وجود آی پی
     server_id = db.query(s_models.ServerModel).filter(
