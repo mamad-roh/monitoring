@@ -5,13 +5,15 @@ from contact import models, schemas
 
 def set_null(request):
     """convert '' request to null"""
-
-    if len(request.email) == 0:
-        request.email = None
-    if len(request.telegram_id) == 0:
-        request.telegram_id = None
-    if len(request.phone) == 0:
-        request.phone = None
+    if request.email is not None:
+        if len(request.email) == 0:
+            request.email = None
+    if request.telegram_id is not None:
+        if len(request.telegram_id) == 0:
+            request.telegram_id = None
+    if request.phone is not None:
+        if len(request.phone) == 0:
+            request.phone = None
     return request
 
 
@@ -53,7 +55,7 @@ def check_update_exist(_object, method, _id, db):
 
     if db.filter(_object == method).filter(
         models.ContactModel.id != _id
-    ).first():
+    ).first() and method:
         return False
     return True
 

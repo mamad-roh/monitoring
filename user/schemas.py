@@ -37,7 +37,7 @@ class OutUserSchemas(BaseModel):
     username: Optional[str]
     first_name: Optional[str]
     last_name: Optional[str]
-    email: Optional[EmailStr]
+    email: Optional[str]
     is_active: Optional[bool]
     is_staff: Optional[bool]
 

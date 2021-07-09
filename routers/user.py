@@ -42,8 +42,7 @@ def get_user(
 
 @router.put(
     '/me',
-    status_code=status.HTTP_200_OK,
-    response_model=schemas.OutUserPutSchemas
+    status_code=status.HTTP_200_OK
 )
 def update(
         request: schemas.OutUserPutSchemas,
