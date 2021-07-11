@@ -15,7 +15,11 @@ class InContactSchemas(BaseModel):
         orm_mode = True
     full_name: str = Query(None, min_length=4, max_length=50)
     # phone: Annotated[str, Field(max_length=14)]
-    phone: str = Query(None, max_length=14)
+    phone: str = Query(
+        None, 
+        max_length=14, 
+        regex="(\+989|09)(1[0-9]|3[1-9]|2[1-9])-?[0-9]{3}-?[0-9]{4}"
+    )
     email: EmailEmptyAllowedStr = Query(None)
     telegram_id: str = Query(None, max_length=50)
     is_active: bool
